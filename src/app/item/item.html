@@ -1,0 +1,44 @@
+<div class="item-container" [class.expanded]="expandido">
+  
+  <div class="item-main" *ngIf="!emEdicao" (click)="toggleExpandir($event)">
+    <div class="item-content">
+      <span class="priority-indicator" 
+            [class.alta]="tarefa.prioridade === 'Alta'"
+            [class.media]="tarefa.prioridade === 'Média'"
+            [class.baixa]="tarefa.prioridade === 'Baixa'"
+            [title]="tarefa.prioridade"></span>
+      <input [id]="tarefa._id" type="checkbox" [checked]="tarefa.statusRealizada"
+          (change)="tarefa.statusRealizada = !tarefa.statusRealizada; modificaTarefa.emit()" />
+      <label [for]="tarefa._id" [class.completed]="tarefa.statusRealizada">{{tarefa.descricao}}</label>
+    </div>
+    
+    <div class="btn-wrapper">
+        <button class="btn-icon" (click)="emEdicao = true" title="Editar">✏️</button>
+        <button class="btn-icon btn-del" (click)="onRemover()" title="Remover">🗑️</button>
+    </div>
+  </div>
+
+  <div class="item-edit" *ngIf="emEdicao">
+      <input class="sm-text-input edit-input" #editedItem [value]="tarefa.descricao" (keyup.enter)="tarefa.descricao=editedItem.value; emEdicao=false; modificaTarefa.emit()" autofocus>
+      <div class="btn-wrapper">
+          <button class="btn-small" (click)="emEdicao = false">Cancelar</button>
+          <button class="btn-small btn-save" (click)="tarefa.descricao=editedItem.value; emEdicao=false; modificaTarefa.emit()">Salvar</button>
+      </div>
+  </div>
+
+  <div class="sub-checklist" *ngIf="expandido && !emEdicao">
+    <div class="sub-tasks-list" *ngIf="tarefa.subTarefas && tarefa.subTarefas.length > 0">
+      <div class="sub-task-item" *ngFor="let sub of tarefa.subTarefas; let i = index">
+        <input type="checkbox" [checked]="sub.statusRealizada" (change)="toggleSubTarefa(i)" />
+        <span [class.completed]="sub.statusRealizada">{{ sub.descricao }}</span>
+        <button class="btn-icon-tiny" (click)="removerSubTarefa(i)">✕</button>
+      </div>
+    </div>
+    
+    <div class="add-sub-task">
+      <input class="sm-text-input" #novaSub placeholder="Adicionar sub-tarefa..." (keyup.enter)="addSubTarefa(novaSub.value); novaSub.value=''">
+      <button class="btn-small btn-add-sub" (click)="addSubTarefa(novaSub.value); novaSub.value=''">+</button>
+    </div>
+  </div>
+
+</div>
