@@ -25,7 +25,7 @@ export class App implements OnInit {
   private platformId = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient) {
-    this.apiURL = 'https://projeto-backend-marcelo.onrender.com';
+    this.apiURL = 'https://tarefas-zayon.onrender.com';
   }
 
   roleUsuario = signal('');
