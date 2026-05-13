@@ -167,6 +167,32 @@ export class App implements OnInit {
     });
   }
 
+  usuarioEditandoId = signal<string | null>(null);
+
+  ATUALIZAR_usuario(id: string, novoNome: string, novaSenha?: string) {
+    if (!novoNome.trim()) {
+      alert('O nome não pode ser vazio!');
+      return;
+    }
+    
+    const body: any = { nome: novoNome };
+    if (novaSenha && novaSenha.trim() !== '') {
+      body.senha = novaSenha;
+    }
+
+    const token = JSON.parse(this.tokenJWT).token;
+    this.http.patch(`${this.apiURL}/api/usuario/${id}`, body, {
+      headers: { 'id-token': token }
+    }).subscribe({
+      next: () => {
+        alert('Usuário atualizado com sucesso!');
+        this.usuarioEditandoId.set(null);
+        this.LISTAR_usuarios();
+      },
+      error: (err) => alert('Erro ao atualizar: ' + err.error.message)
+    });
+  }
+
   painelAdminAberto = signal(false);
 
   toggleAdminPainel() {

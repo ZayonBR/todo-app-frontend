@@ -48,14 +48,24 @@
 
           <div class="user-list">
             <div *ngFor="let u of listaUsuarios()" class="user-card">
-              <div class="user-main-info">
+              <div class="user-main-info" *ngIf="usuarioEditandoId() !== u._id">
                 <div class="user-meta">
                   <span class="user-name">{{ u.nome }}</span>
                   <span class="badge" [class.badge-adm]="u.role === 'adm'">{{ u.role }}</span>
                 </div>
                 <div class="user-actions">
+                  <button class="btn-icon" (click)="usuarioEditandoId.set(u._id)" title="Editar">✏️</button>
                   <button *ngIf="u.role !== 'adm'" class="btn-icon" (click)="PROMOVER_usuario(u._id)" title="Promover">⬆️</button>
                   <button class="btn-icon btn-del" (click)="DELETAR_usuario(u._id)" title="Remover">🗑️</button>
+                </div>
+              </div>
+
+              <div class="user-edit-form" *ngIf="usuarioEditandoId() === u._id" style="display: flex; flex-direction: column; gap: 10px;">
+                <input class="sm-text-input" #editNome [value]="u.nome" placeholder="Novo nome" />
+                <input class="sm-text-input" #editSenha type="password" placeholder="Nova senha (deixe vazio para manter)" />
+                <div class="btn-wrapper">
+                  <button class="btn-small" (click)="usuarioEditandoId.set(null)">Cancelar</button>
+                  <button class="btn-small btn-save" (click)="ATUALIZAR_usuario(u._id, editNome.value, editSenha.value)">Salvar</button>
                 </div>
               </div>
             </div>
