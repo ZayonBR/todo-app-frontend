@@ -32,39 +32,18 @@
       </ul>
     </div>
 
-    <div class="side-panel">
+    <div class="side-panel" *ngIf="roleUsuario() === 'adm'">
 
-      <!-- Perfil Compacto -->
-      <div class="main section-profile">
-        <div class="profile-header">
-          <div class="avatar">{{ nomeUsuario().charAt(0).toUpperCase() }}</div>
-          <div class="profile-info">
-            <h2>{{ nomeUsuario() }}</h2>
-            <p class="role-text">{{ roleUsuario() === 'adm' ? 'Administrador' : 'Usuário' }}</p>
-          </div>
-        </div>
-        <div class="stats-row">
-          <div class="stat-item">
-            <span class="stat-label">Concluídas</span>
-            <span class="stat-value">{{ tarefasFeitas() }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total</span>
-            <span class="stat-value">{{ arrayDeTarefas().length }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Painel ADM Refinado -->
-      <div *ngIf="roleUsuario() === 'adm'" class="main admin-panel-new">
+      <!-- Painel ADM Simplificado -->
+      <div class="main admin-panel-new">
         <div class="admin-header-new" (click)="toggleAdminPainel()">
-          <h3>Gerenciar Usuários</h3>
+          <h3>Painel ADM</h3>
           <span class="icon">{{ painelAdminAberto() ? '−' : '+' }}</span>
         </div>
 
         <div class="admin-content" *ngIf="painelAdminAberto()">
           <button class="btn-refresh" (click)="LISTAR_usuarios()">
-            <span>🔄</span> Atualizar
+            <span>🔄</span> Atualizar Lista
           </button>
 
           <div class="user-list">
@@ -75,17 +54,9 @@
                   <span class="badge" [class.badge-adm]="u.role === 'adm'">{{ u.role }}</span>
                 </div>
                 <div class="user-actions">
-                  <button *ngIf="u.role !== 'adm'" class="btn-icon" (click)="PROMOVER_usuario(u._id)"
-                    title="Promover">⬆️</button>
+                  <button *ngIf="u.role !== 'adm'" class="btn-icon" (click)="PROMOVER_usuario(u._id)" title="Promover">⬆️</button>
                   <button class="btn-icon btn-del" (click)="DELETAR_usuario(u._id)" title="Remover">🗑️</button>
                 </div>
-              </div>
-
-              <div class="tasks-mini-list" *ngIf="u.tarefas && u.tarefas.length > 0">
-                <div *ngFor="let t of u.tarefas.slice(0, 3)" class="task-dot" [class.dot-done]="t.statusRealizada">
-                  {{ t.descricao }}
-                </div>
-                <div *ngIf="u.tarefas.length > 3" class="more-tasks">+{{ u.tarefas.length - 3 }} tarefas</div>
               </div>
             </div>
           </div>
